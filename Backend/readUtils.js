@@ -2,13 +2,14 @@ import { ObjectId } from "mongodb"
 import { format } from "date-and-time"
 import { moviesCollection } from "./myMongo.js"
 
-const getMovies = (res, type, page = 0) => {
+const getMovies = (res, type, page = 1) => {
+
+    const safePage = Math.max(Number(page) || 1, 1)
+
     moviesCollection
-        .find({
-            type: type
-        }, {
-            limit: 10,
-            skip: page,
+        .find({ type: type }, {
+            limit: 30,
+            skip: (safePage - 1) * 35,
             sort: { year: -1 }
         })
         .project({
@@ -21,6 +22,9 @@ const getMovies = (res, type, page = 0) => {
             languages: 1,
             runtime: 1,
             poster: 1,
+            countries:1,
+            type:1,
+            rated:1
 
         })
         .toArray()
@@ -30,9 +34,9 @@ const getMovies = (res, type, page = 0) => {
             else {
                 for (let doc of resp) {
                     if (doc.runtime) {
-                        let hours = Math.floor(doc.runtime / 60);
-                        let minutes = doc.runtime % 60;
-                        doc.runtime = `${hours == 1 ? "hr" : "hrs"} ${minutes} ${minutes == 1 ? "min" : "mins"}`;
+                        let hours = Math.floor(doc.runtime / 60)
+                        let minutes = doc.runtime % 60
+                        doc.runtime = `${hours == 1 ? "hr" : "hrs"} ${minutes} ${minutes == 1 ? "min" : "mins"}`
 
                     }
                 }
@@ -57,6 +61,9 @@ const getMovie = (res, movieID) => {
                 languages: 1,
                 runtime: 1,
                 poster: 1,
+                countries: 1,
+                type: 1,
+                rated: 1
             }
         }
     )
@@ -93,7 +100,10 @@ const getYears = (res, year) => {
             plot: 1,
             title: 1,
             genres: 1,
-            year: 1
+            year: 1,
+            countries: 1,
+            type: 1,
+            rated: 1
         })
         .toArray()
         .then(docs => {
@@ -132,4 +142,4 @@ const getRating = (res, rating) => {
 
 
 
-export { getMovies, getMovie, getFavs, getYears, getRating }   
+export { getMovies, getMovie, getFavs, getYears, getRating } 
