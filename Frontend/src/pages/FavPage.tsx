@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import Shows from "../components/Show"
+import Shows from "../components/Shows"
 import type { showType } from "../components/showType"
 
 const FavPage = () => {
@@ -69,3 +69,17 @@ const FavPage = () => {
 }
 
 export default FavPage
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Website made by 1Kazso(Kobe)

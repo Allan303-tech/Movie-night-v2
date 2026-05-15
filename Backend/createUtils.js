@@ -6,22 +6,25 @@ const addToFavs = (res, id) => {
     moviesCollection
         .countDocuments({ showID: id })
         .then(count => {
+
             if (count > 0) {
-                res.status(400).json({ message: "Already in favorites" })
+                return res.status(400).json({ message: "Already in favorites" })
             }
-            moviesCollection
-                .insertOne({
-                    showID: id,
-                    note: "",
-                    watched: false
-                })
-                .then(results => {
-                    if (results.insertedId) {
-                        res.status(200).json({ message: "Added to favourites" })
-                    } else {
-                        res.status(500).json({ error: "An error occurred while adding to favourites" })
-                    }
-                })
+
+            return moviesCollection.insertOne({
+                showID: id,
+                note: "",
+                watched: true
+            })
+        })
+        .then(results => {
+            if (!results) return
+
+            if (results.insertedId) {
+                res.status(200).json({ message: "Added to favourites" })
+            } else {
+                res.status(500).json({ error: "Failed to add favourite" })
+            }
         })
 }
 
